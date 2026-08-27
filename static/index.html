@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Libertam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <button class="sidebar-toggle" id="sidebar-toggle" title="">&#9776;</button>
+      <div class="brand">
+        <span class="brand-icon-mark">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 16L9 10L13 14L20 6" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 6H20V11" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand-text">Libertam</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="side-nav-btn active" data-tab="dashboard" title="">
+        <span class="icon">📊</span><span class="label" data-i18n="nav.dashboard">Dashboard</span>
+      </button>
+      <button class="side-nav-btn" data-tab="trades" title="">
+        <span class="icon">📋</span><span class="label" data-i18n="nav.trades">Trades</span>
+      </button>
+      <button class="side-nav-btn" data-tab="performance" title="">
+        <span class="icon">📈</span><span class="label" data-i18n="nav.performance">Performances</span>
+      </button>
+      <button class="side-nav-btn" data-tab="propfirms" title="">
+        <span class="icon">🏢</span><span class="label" data-i18n="nav.propfirms">Prop Firms</span>
+      </button>
+      <button class="side-nav-btn" data-tab="account" title="">
+        <span class="icon">💼</span><span class="label" data-i18n="nav.account">Compte</span>
+      </button>
+      <button class="side-nav-btn" data-tab="import" title="">
+        <span class="icon">📥</span><span class="label" data-i18n="nav.import">Importer CSV</span>
+      </button>
+      <button class="side-nav-btn" data-tab="analyses" title="">
+        <span class="icon">📝</span><span class="label" data-i18n="nav.analyses">Analyses</span>
+      </button>
+      <button class="side-nav-btn" data-tab="help" title="">
+        <span class="icon">❓</span><span class="label" data-i18n="nav.help">Aide</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <div class="topbar-filters">
+
+        <div class="filter-dropdown" id="date-filter-wrap">
+          <button class="filter-btn" id="date-filter-btn">
+            <span class="filter-btn-icon">📅</span><span id="date-filter-label" data-i18n="filter.allTime">Toute la période</span>
+          </button>
+          <div class="filter-panel filter-panel-date" id="date-filter-panel">
+            <div class="date-presets" id="date-presets">
+              <button type="button" data-preset="today" data-i18n="filter.today">Aujourd'hui</button>
+              <button type="button" data-preset="week" data-i18n="filter.thisWeek">Cette semaine</button>
+              <button type="button" data-preset="month" data-i18n="filter.thisMonth">Ce mois-ci</button>
+              <button type="button" data-preset="last30" data-i18n="filter.last30Days">30 derniers jours</button>
+              <button type="button" data-preset="lastmonth" data-i18n="filter.lastMonth">Mois dernier</button>
+              <button type="button" data-preset="quarter" data-i18n="filter.thisQuarter">Ce trimestre</button>
+              <button type="button" data-preset="ytd" data-i18n="filter.ytd">Depuis le début de l'année</button>
+              <button type="button" data-preset="all" data-i18n="filter.allTime">Toute la période</button>
+            </div>
+            <div class="date-range-inputs">
+              <label><span data-i18n="filter.from">Du</span><input type="date" id="date-from-input"></label>
+              <label><span data-i18n="filter.to">Au</span><input type="date" id="date-to-input"></label>
+            </div>
+            <div class="filter-panel-actions">
+              <button class="btn primary" id="date-filter-apply" data-i18n="filter.apply">Appliquer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-dropdown" id="tags-filter-wrap">
+          <button class="filter-btn" id="tags-filter-btn">
+            <span class="filter-btn-icon">🏷</span><span id="tags-filter-label" data-i18n="filter.tagsStrategy">Tags &amp; Stratégie</span>
+          </button>
+          <div class="filter-panel filter-panel-tags" id="tags-filter-panel">
+            <div class="account-filter-section-label" data-i18n="filter.tags">Tags</div>
+            <div class="account-filter-list" id="tags-filter-list"></div>
+            <div class="filter-divider"></div>
+            <div class="account-filter-section-label" data-i18n="filter.strategy">Stratégie</div>
+            <div class="account-filter-list" id="strategy-filter-list"></div>
+            <div class="filter-divider"></div>
+            <button type="button" class="account-filter-manage" id="tags-filter-manage">
+              <span class="icon">⚙</span> <span data-i18n="filter.manageTags">Gérer les catégories</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-dropdown" id="account-filter-wrap">
+          <button class="filter-btn" id="account-filter-btn">
+            <span class="filter-btn-icon">👤</span><span id="account-filter-label" data-i18n="filter.allAccounts">Tous les comptes</span>
+          </button>
+          <div class="filter-panel filter-panel-account" id="account-filter-panel">
+            <label class="account-filter-row all-row">
+              <input type="checkbox" id="account-filter-all" checked><span data-i18n="filter.allAccounts">Tous les comptes</span>
+            </label>
+            <div class="filter-divider"></div>
+            <div class="account-filter-section-label" data-i18n="filter.myAccounts">Mes comptes</div>
+            <div class="account-filter-list" id="account-filter-list"></div>
+            <div class="filter-divider"></div>
+            <label class="account-filter-row archived-row">
+              <input type="checkbox" id="account-filter-show-archived"><span data-i18n="filter.showArchived">Afficher les archivés</span>
+            </label>
+            <button type="button" class="account-filter-manage" id="account-filter-manage">
+              <span class="icon">⚙</span> <span data-i18n="filter.manageAccounts">Gérer les comptes</span>
+            </button>
+          </div>
+        </div>
+
+        <button class="theme-toggle" id="theme-toggle" title="">🌙</button>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- DASHBOARD -->
+      <section id="tab-dashboard" class="tab-panel active">
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-label" data-i18n="dash.balance">Solde actuel</div><div class="stat-value" id="stat-balance">-</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="dash.closedTrades">Trades clôturés</div><div class="stat-value" id="stat-total">-</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="dash.totalPnl">PnL total</div><div class="stat-value" id="stat-pnl">-</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="dash.avgR">R moyen</div><div class="stat-value" id="stat-avgr">-</div></div>
+        </div>
+
+        <div class="stat-grid gauge-grid">
+          <div class="stat-card gauge-card">
+            <div class="gauge-header">
+              <span data-i18n="dash.tradeWinPct">Trade win %</span>
+              <span class="info-icon" data-i18n-title="tip.tradeWinPct" title="">&#9432;</span>
+            </div>
+            <div class="gauge-body">
+              <div class="gauge-value-text" id="gauge-tradewin-value">-</div>
+              <div class="gauge-svg" id="gauge-tradewin"></div>
+            </div>
+            <div class="gauge-legend" id="legend-tradewin"></div>
+          </div>
+
+          <div class="stat-card gauge-card">
+            <div class="gauge-header">
+              <span data-i18n="dash.profitFactor">Profit factor</span>
+              <span class="info-icon" data-i18n-title="tip.profitFactor" title="">&#9432;</span>
+            </div>
+            <div class="gauge-body">
+              <div class="gauge-value-text" id="gauge-profitfactor-value">-</div>
+              <div class="gauge-svg" id="gauge-profitfactor"></div>
+            </div>
+          </div>
+
+          <div class="stat-card gauge-card">
+            <div class="gauge-header">
+              <span data-i18n="dash.dayWinPct">Day win %</span>
+              <span class="info-icon" data-i18n-title="tip.dayWinPct" title="">&#9432;</span>
+            </div>
+            <div class="gauge-body">
+              <div class="gauge-value-text" id="gauge-daywin-value">-</div>
+              <div class="gauge-svg" id="gauge-daywin"></div>
+            </div>
+            <div class="gauge-legend" id="legend-daywin"></div>
+          </div>
+
+          <div class="stat-card gauge-card">
+            <div class="gauge-header">
+              <span data-i18n="dash.avgWinLoss">Avg win/loss trade</span>
+              <span class="info-icon" data-i18n-title="tip.avgWinLoss" title="">&#9432;</span>
+            </div>
+            <div class="avgwl-body" id="avgwl-body"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 data-i18n="dash.balanceCurve">Courbe du solde du compte</h3>
+          <div id="equity-chart" class="chart-wrap"></div>
+        </div>
+
+        <div class="panel">
+          <h3>
+            <span data-i18n="dash.dailyPnl">P&amp;L net journalier</span>
+            <span class="info-icon" data-i18n-title="tip.dailyPnl" title="">&#9432;</span>
+          </h3>
+          <div id="daily-pnl-chart" class="chart-wrap"></div>
+        </div>
+
+        <div class="panel">
+          <h3>
+            <span data-i18n="dash.dailyCumulativePnl">P&amp;L net cumulatif journalier</span>
+            <span class="info-icon" data-i18n-title="tip.dailyCumulativePnl" title="">&#9432;</span>
+          </h3>
+          <div id="daily-cumulative-chart" class="chart-wrap" style="position:relative"></div>
+        </div>
+
+        <div class="panel">
+          <div class="mini-tabs">
+            <button class="mini-tab-btn active" data-minitab="recent" data-i18n="dash.recentTrades">Trades récents</button>
+            <button class="mini-tab-btn" data-minitab="open" data-i18n="dash.openPositions">Positions ouvertes</button>
+          </div>
+          <div id="minitab-recent" class="minitab-panel active">
+            <table class="data-table">
+              <thead><tr>
+                <th data-i18n="table.closeDate">Date de clôture</th><th data-i18n="table.symbol">Symbole</th><th data-i18n="table.netPnl">P&amp;L net</th>
+              </tr></thead>
+              <tbody id="recent-trades-tbody"></tbody>
+            </table>
+          </div>
+          <div id="minitab-open" class="minitab-panel">
+            <table class="data-table">
+              <thead><tr>
+                <th data-i18n="table.openDate">Date d'ouverture</th><th data-i18n="table.symbol">Symbole</th><th data-i18n="table.volume">Volume</th>
+              </tr></thead>
+              <tbody id="open-positions-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="calendar-header">
+            <button class="cal-nav-btn" id="cal-prev">&lsaquo;</button>
+            <div class="filter-dropdown" id="cal-picker-wrap">
+              <button class="cal-month-label" id="cal-month-label-btn">
+                <span id="cal-month-label"></span> <span class="chevron">&#9662;</span>
+              </button>
+              <div class="filter-panel cal-picker-panel" id="cal-picker-panel">
+                <div class="cal-picker-header">
+                  <button type="button" class="cal-picker-header-btn" id="cal-picker-header-btn"></button>
+                </div>
+                <div class="cal-picker-grid" id="cal-picker-grid"></div>
+                <div class="filter-panel-actions">
+                  <button class="btn primary" id="cal-picker-ok">OK</button>
+                </div>
+              </div>
+            </div>
+            <button class="cal-nav-btn" id="cal-next">&rsaquo;</button>
+            <button class="btn" id="cal-thismonth" data-i18n="dash.thisMonth">Ce mois-ci</button>
+            <span class="cal-stats" id="cal-stats"></span>
+          </div>
+          <div class="calendar-layout">
+            <div class="calendar-main">
+              <div class="calendar-weekday-row" id="calendar-weekday-row"></div>
+              <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+            <div class="calendar-weeks" id="calendar-weeks"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 data-i18n="dash.bySymbol">Par symbole</h3>
+          <table class="data-table" id="symbol-table">
+            <thead><tr>
+              <th data-i18n="table.symbol">Symbole</th><th data-i18n="table.trades">Trades</th>
+              <th data-i18n="table.winRate">Win rate</th><th data-i18n="table.pnl">PnL</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TRADES -->
+      <section id="tab-trades" class="tab-panel">
+        <div class="toolbar">
+          <input type="text" id="filter-symbol" data-i18n-placeholder="trades.filterPlaceholder" placeholder="Filtrer par symbole...">
+          <select id="filter-status">
+            <option value="" data-i18n="trades.allStatuses">Tous statuts</option>
+            <option value="open" data-i18n="trades.open">Ouvert</option>
+            <option value="closed" data-i18n="trades.closed">Clôturé</option>
+          </select>
+          <select id="filter-source">
+            <option value="" data-i18n="trades.allSources">Toutes sources</option>
+            <option value="manual" data-i18n="trades.manual">Manuel</option>
+            <option value="csv" data-i18n="trades.csv">CSV</option>
+          </select>
+          <button class="btn" id="refresh-trades" data-i18n="trades.refresh">Actualiser</button>
+          <button class="btn" id="export-trades" data-i18n="trades.export">Exporter CSV</button>
+          <button class="btn primary" id="open-add-trade" data-i18n="trades.addTrade">+ Ajouter un trade</button>
+        </div>
+        <div class="table-wrap">
+        <table class="data-table" id="trades-table">
+          <thead><tr>
+            <th><input type="checkbox" id="select-all-trades"></th>
+            <th data-i18n="table.account">Compte</th>
+            <th data-i18n="table.symbol">Symbole</th><th data-i18n="table.side">Sens</th><th data-i18n="table.qty">Qté</th>
+            <th data-i18n="table.entry">Entrée</th><th data-i18n="table.exit">Sortie</th>
+            <th data-i18n="table.openedAt">Ouvert</th><th data-i18n="table.closedAt">Clôturé</th>
+            <th data-i18n="table.pnl">PnL</th><th data-i18n="table.r">R</th><th data-i18n="table.source">Source</th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        </div>
+      </section>
+
+      <!-- PERFORMANCE -->
+      <section id="tab-performance" class="tab-panel">
+        <div class="mini-tabs">
+          <button class="perf-tab-btn active" data-perftab="overview" data-i18n="perf.overview">Overview</button>
+          <button class="perf-tab-btn" data-perftab="summary" data-i18n="perf.summary">Résumé</button>
+          <button class="perf-tab-btn" data-perftab="days" data-i18n="perf.days">Jours</button>
+          <button class="perf-tab-btn" data-perftab="trades" data-i18n="perf.trades">Trades</button>
+        </div>
+
+        <div id="perftab-overview" class="minitab-panel active">
+          <div class="stat-grid">
+            <div class="stat-card"><div class="stat-label" data-i18n="perf.bestMonth">Meilleur mois</div><div class="stat-value" id="ov-best-month">-</div><div class="perf-subvalue" id="ov-best-month-label"></div></div>
+            <div class="stat-card"><div class="stat-label" data-i18n="perf.lowestMonth">Mois le plus bas</div><div class="stat-value" id="ov-lowest-month">-</div><div class="perf-subvalue" id="ov-lowest-month-label"></div></div>
+            <div class="stat-card"><div class="stat-label" data-i18n="perf.avgPerMonth">Moyenne</div><div class="stat-value" id="ov-avg-month">-</div><div class="perf-subvalue" data-i18n="perf.perMonth">par mois</div></div>
+          </div>
+
+          <div class="panel">
+            <div class="overview-list" id="overview-list"></div>
+          </div>
+        </div>
+
+        <div id="perftab-summary" class="minitab-panel">
+          <div class="panel perf-grid">
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.netPnl">P&amp;L net</span><span class="info-icon" data-i18n-title="tip.netPnl" title="">&#9432;</span></div><div class="perf-value" id="perf-net-pnl">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.tradeExpectancy">Espérance par trade</span><span class="info-icon" data-i18n-title="tip.tradeExpectancy" title="">&#9432;</span></div><div class="perf-value" id="perf-expectancy">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgNetTradePnl">P&amp;L net moyen par trade</span><span class="info-icon" data-i18n-title="tip.avgNetTradePnl" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-net-trade">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgDailyVolume">Volume journalier moyen</span><span class="info-icon" data-i18n-title="tip.avgDailyVolume" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-volume">-</div></div>
+
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.winPct">Win %</span><span class="info-icon" data-i18n-title="tip.winPct" title="">&#9432;</span></div><div class="perf-value" id="perf-win-pct">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgDailyWinLoss">Ratio gain/perte journalier moyen</span><span class="info-icon" data-i18n-title="tip.avgDailyWinLoss" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-daily-winloss">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgDailyNetPnl">P&amp;L net journalier moyen</span><span class="info-icon" data-i18n-title="tip.avgDailyNetPnl" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-daily-pnl">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.loggedDays">Jours enregistrés</span><span class="info-icon" data-i18n-title="tip.loggedDays" title="">&#9432;</span></div><div class="perf-value" id="perf-logged-days">-</div></div>
+
+            <div class="perf-stat">
+              <div class="perf-label"><span data-i18n="perf.avgDailyWinPct">Win % journalier moyen</span><span class="info-icon" data-i18n-title="tip.avgDailyWinPct" title="">&#9432;</span></div>
+              <div class="perf-value" id="perf-avg-daily-winpct">-</div>
+              <div class="perf-subvalue" id="perf-avg-daily-winpct-frac"></div>
+            </div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgTradeWinLoss">Ratio gain/perte moyen par trade</span><span class="info-icon" data-i18n-title="tip.avgTradeWinLoss" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-trade-winloss">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgPlannedR">R planifié moyen</span><span class="info-icon" data-i18n-title="tip.avgPlannedR" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-planned-r">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.maxDailyDrawdown">Drawdown journalier net max</span><span class="info-icon" data-i18n-title="tip.maxDailyDrawdown" title="">&#9432;</span></div><div class="perf-value" id="perf-max-drawdown">-</div></div>
+
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.profitFactor">Profit factor</span><span class="info-icon" data-i18n-title="tip.profitFactor" title="">&#9432;</span></div><div class="perf-value" id="perf-profit-factor">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgHoldTime">Durée de détention moyenne</span><span class="info-icon" data-i18n-title="tip.avgHoldTime" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-hold">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgRealizedR">R réalisé moyen</span><span class="info-icon" data-i18n-title="tip.avgRealizedR" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-realized-r">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgDailyDrawdown">Drawdown journalier net moyen</span><span class="info-icon" data-i18n-title="tip.avgDailyDrawdown" title="">&#9432;</span></div><div class="perf-value" id="perf-avg-drawdown">-</div></div>
+          </div>
+        </div>
+
+        <div id="perftab-days" class="minitab-panel">
+          <div class="panel perf-grid">
+            <div class="perf-stat">
+              <div class="perf-label"><span data-i18n="perf.avgDailyWinPct">Win % journalier moyen</span><span class="info-icon" data-i18n-title="tip.avgDailyWinPct" title="">&#9432;</span></div>
+              <div class="perf-value" id="perf2-avg-daily-winpct">-</div>
+              <div class="perf-subvalue" id="perf2-avg-daily-winpct-frac"></div>
+            </div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgDailyWinLoss">Ratio gain/perte journalier moyen</span><span class="info-icon" data-i18n-title="tip.avgDailyWinLoss" title="">&#9432;</span></div><div class="perf-value" id="perf2-avg-daily-winloss">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.largestProfitableDay">Meilleure journée</span><span class="info-icon" data-i18n-title="tip.largestProfitableDay" title="">&#9432;</span></div><div class="perf-value pos perf-link" id="perf2-best-day">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgDailyNetPnl">P&amp;L net journalier moyen</span><span class="info-icon" data-i18n-title="tip.avgDailyNetPnl" title="">&#9432;</span></div><div class="perf-value" id="perf2-avg-daily-pnl">-</div></div>
+
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.largestLosingDay">Pire journée</span><span class="info-icon" data-i18n-title="tip.largestLosingDay" title="">&#9432;</span></div><div class="perf-value neg perf-link" id="perf2-worst-day">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgTradingDayDuration">Durée moyenne d'une journée de trading</span><span class="info-icon" data-i18n-title="tip.avgTradingDayDuration" title="">&#9432;</span></div><div class="perf-value" id="perf2-avg-day-duration">-</div></div>
+          </div>
+        </div>
+
+        <div id="perftab-trades" class="minitab-panel">
+          <div class="panel perf-grid">
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.winPct">Win %</span><span class="info-icon" data-i18n-title="tip.winPct" title="">&#9432;</span></div><div class="perf-value" id="perf3-win-pct">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgTradeWinLoss">Ratio gain/perte moyen par trade</span><span class="info-icon" data-i18n-title="tip.avgTradeWinLoss" title="">&#9432;</span></div><div class="perf-value" id="perf3-avg-trade-winloss">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.largestProfitableTrade">Meilleur trade</span><span class="info-icon" data-i18n-title="tip.largestProfitableTrade" title="">&#9432;</span></div><div class="perf-value pos perf-link" id="perf3-best-trade">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.longestTradeDuration">Trade le plus long</span><span class="info-icon" data-i18n-title="tip.longestTradeDuration" title="">&#9432;</span></div><div class="perf-value perf-link" id="perf3-longest-trade">-</div></div>
+
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.longsWinPct">Win % (longs)</span><span class="info-icon" data-i18n-title="tip.longsWinPct" title="">&#9432;</span></div><div class="perf-value" id="perf3-longs-winpct">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.tradeExpectancy">Espérance par trade</span><span class="info-icon" data-i18n-title="tip.tradeExpectancy" title="">&#9432;</span></div><div class="perf-value" id="perf3-expectancy">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.largestLosingTrade">Pire trade</span><span class="info-icon" data-i18n-title="tip.largestLosingTrade" title="">&#9432;</span></div><div class="perf-value neg perf-link" id="perf3-worst-trade">-</div></div>
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.shortsWinPct">Win % (shorts)</span><span class="info-icon" data-i18n-title="tip.shortsWinPct" title="">&#9432;</span></div><div class="perf-value" id="perf3-shorts-winpct">-</div></div>
+
+            <div class="perf-stat"><div class="perf-label"><span data-i18n="perf.avgNetTradePnl">P&amp;L net moyen par trade</span><span class="info-icon" data-i18n-title="tip.avgNetTradePnl" title="">&#9432;</span></div><div class="perf-value" id="perf3-avg-net-trade">-</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROP FIRMS -->
+      <section id="tab-propfirms" class="tab-panel">
+        <div id="propfirms-empty" class="panel" style="display:none">
+          <h3 data-i18n="propfirm.title">Prop Firms</h3>
+          <p class="muted" data-i18n="propfirm.noAccounts">Aucun compte n'est marqué comme compte de prop firm. Va dans Compte pour en créer un ou pour cocher "Prop firm" sur un compte existant.</p>
+        </div>
+        <div id="propfirms-list"></div>
+      </section>
+
+      <!-- ACCOUNT -->
+      <section id="tab-account" class="tab-panel">
+        <div class="panel">
+          <h3 data-i18n="account.accounts">Comptes</h3>
+          <div class="table-wrap">
+            <table class="data-table" id="accounts-table">
+              <thead><tr>
+                <th data-i18n="account.name">Nom</th><th data-i18n="account.initialBalance">Solde initial</th>
+                <th data-i18n="account.date">Date</th><th data-i18n="propfirm.isPropFirm">Prop firm</th>
+                <th data-i18n="propfirm.firmName">Firme</th>
+                <th data-i18n="account.status">Statut</th><th></th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <h4 data-i18n="account.addAccount">Ajouter un compte</h4>
+          <form id="account-form" class="form-grid">
+            <label><span data-i18n="account.name">Nom</span> <input type="text" id="acc-name" required></label>
+            <label><span data-i18n="account.initialBalance">Solde initial</span> <input type="number" step="any" id="acc-initial-balance" value="0"></label>
+            <label><span data-i18n="account.date">Date</span> <input type="date" id="acc-initial-date"></label>
+            <label class="checkbox-label"><input type="checkbox" id="acc-is-propfirm"> <span data-i18n="propfirm.isPropFirm">Prop firm</span></label>
+            <label><span data-i18n="propfirm.firmName">Firme</span> <input type="text" id="acc-firm-name" placeholder="FTMO, MFF, Apex..."></label>
+          </form>
+          <button class="btn primary" id="add-account-btn" data-i18n="account.add">Ajouter</button>
+        </div>
+
+        <div class="panel">
+          <h3 data-i18n="account.cashflows">Dépôts / Retraits</h3>
+          <form id="cashflow-form" class="form-grid">
+            <label><span data-i18n="table.account">Compte</span>
+              <select id="cf-account"></select>
+            </label>
+            <label><span data-i18n="account.type">Type</span>
+              <select id="cf-type">
+                <option value="deposit" data-i18n="account.deposit">Dépôt</option>
+                <option value="withdrawal" data-i18n="account.withdrawal">Retrait</option>
+              </select>
+            </label>
+            <label><span data-i18n="account.amount">Montant</span> <input type="number" step="any" id="cf-amount" required></label>
+            <label><span data-i18n="account.date">Date</span> <input type="date" id="cf-date" required></label>
+            <label><span data-i18n="account.note">Note</span> <input type="text" id="cf-note"></label>
+          </form>
+          <button class="btn primary" id="add-cashflow-btn" data-i18n="account.add">Ajouter</button>
+          <div class="table-wrap" style="margin-top:14px">
+            <table class="data-table" id="cashflow-table">
+              <thead><tr>
+                <th data-i18n="account.date">Date</th><th data-i18n="table.account">Compte</th><th data-i18n="account.type">Type</th>
+                <th data-i18n="account.amount">Montant</th><th data-i18n="account.note">Note</th><th></th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel" id="tag-categories-panel">
+          <h3 data-i18n="tags.categories">Catégories</h3>
+          <p class="muted" data-i18n="tags.categoriesHint">Crée des catégories (ex. Erreurs, Timeframe d'entrée) puis ajoute des tags à l'intérieur. Ces tags seront disponibles dans les détails de chaque trade et pourront servir à filtrer.</p>
+          <div class="table-wrap">
+            <table class="data-table" id="categories-table">
+              <thead><tr>
+                <th data-i18n="tags.categoryName">Nom de la catégorie</th><th data-i18n="tags.color">Couleur</th>
+                <th data-i18n="tags.tags">Tags</th><th></th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <h4 data-i18n="tags.addCategory">Ajouter une catégorie</h4>
+          <form id="category-form" class="form-grid">
+            <label><span data-i18n="tags.categoryName">Nom de la catégorie</span> <input type="text" id="cat-name-new" required></label>
+            <label><span data-i18n="tags.color">Couleur</span> <input type="color" id="cat-color-new" value="#4d8dff"></label>
+          </form>
+          <button class="btn primary" id="add-category-btn" data-i18n="account.add">Ajouter</button>
+        </div>
+
+        <div class="panel">
+          <h3 data-i18n="account.settings">Réglages</h3>
+          <form class="form-grid">
+            <label><span data-i18n="account.language">Langue</span>
+              <select id="lang-select">
+                <option value="fr" data-i18n="account.french">Français</option>
+                <option value="en" data-i18n="account.english">English</option>
+              </select>
+            </label>
+          </form>
+        </div>
+      </section>
+
+      <!-- IMPORT -->
+      <section id="tab-import" class="tab-panel">
+        <div class="panel">
+          <h3 data-i18n="import.title">Importer des trades</h3>
+          <p class="muted" id="import-description" data-i18n="import.descriptionTradingview">
+            Exporte ton historique d'ordres depuis TradingView (Paper Trading &rarr; Historique des ordres &rarr; Exporter),
+            puis sélectionne le fichier CSV ici. Les trades sont reconstruits automatiquement à partir des ordres exécutés
+            (les entrées et sorties partielles sont regroupées).
+          </p>
+          <div class="form-grid" style="margin-bottom:12px">
+            <label><span data-i18n="import.platform">Plateforme</span>
+              <select id="csv-platform">
+                <option value="tradingview" data-i18n="import.platformTradingview">TradingView (CSV)</option>
+                <option value="mt5" data-i18n="import.platformMt5">MetaTrader 5 (XLSX)</option>
+              </select>
+            </label>
+            <label><span data-i18n="table.account">Compte</span> <select id="csv-account"></select></label>
+          </div>
+          <input type="file" id="csv-file" accept=".csv">
+          <button class="btn primary" id="csv-preview-btn" data-i18n="import.analyze">Analyser le fichier</button>
+          <div id="csv-warnings"></div>
+        </div>
+
+        <div class="panel" id="csv-preview-panel" style="display:none">
+          <h3 data-i18n="import.preview">Aperçu des trades reconstruits</h3>
+          <div class="toolbar">
+            <label><input type="checkbox" id="csv-select-all" checked> <span data-i18n="import.selectAll">Tout sélectionner</span></label>
+            <span class="muted" id="csv-summary"></span>
+            <button class="btn primary" id="csv-commit-btn" data-i18n="import.commit">Importer la sélection</button>
+          </div>
+          <div class="table-wrap">
+          <table class="data-table" id="csv-preview-table">
+            <thead><tr>
+              <th></th><th data-i18n="table.symbol">Symbole</th><th data-i18n="table.side">Sens</th><th data-i18n="table.qty">Qté</th>
+              <th data-i18n="table.entry">Entrée</th><th data-i18n="table.exit">Sortie</th>
+              <th data-i18n="table.openedAt">Ouvert</th><th data-i18n="table.closedAt">Clôturé</th><th data-i18n="table.pnl">PnL</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 data-i18n="import.log">Historique des imports</h3>
+          <div class="table-wrap">
+            <table class="data-table" id="import-log-table">
+              <thead><tr>
+                <th data-i18n="import.date">Date d'import</th><th data-i18n="table.account">Compte</th><th data-i18n="import.filename">Fichier</th>
+                <th data-i18n="import.inserted">Trades importés</th><th data-i18n="import.skipped">Doublons ignorés</th><th></th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYSES -->
+      <section id="tab-analyses" class="tab-panel">
+        <div class="panel">
+          <div class="calendar-header">
+            <button class="cal-nav-btn" id="an-cal-prev">&lsaquo;</button>
+            <span class="cal-month-label" id="an-cal-month-label"></span>
+            <button class="cal-nav-btn" id="an-cal-next">&rsaquo;</button>
+            <button class="btn" id="an-cal-thismonth" data-i18n="dash.thisMonth">Ce mois-ci</button>
+          </div>
+          <div class="calendar-weekday-row" id="an-calendar-weekday-row"></div>
+          <div class="analysis-calendar-grid" id="analysis-calendar-grid"></div>
+        </div>
+      </section>
+
+      <!-- HELP -->
+      <section id="tab-help" class="tab-panel">
+        <div class="panel help-panel">
+          <h3 data-i18n="help.introTitle">Bienvenue</h3>
+          <p data-i18n="help.introBody">
+            Libertam est un journal de trading 100&nbsp;% local : rien n'est envoyé sur internet, tout reste dans le
+            dossier de l'application. Ce guide résume les principales fonctions ; pour le détail complet, voir le
+            fichier GUIDE.md fourni avec l'application.
+          </p>
+        </div>
+
+        <div class="panel help-panel">
+          <h3 data-i18n="help.sectionsTitle">Les sections du ruban</h3>
+          <ul data-i18n="help.sectionsBody">
+            <li><b>Dashboard</b> — solde, statistiques clés, courbes de P&amp;L, calendrier mensuel cliquable, répartition par symbole</li>
+            <li><b>Trades</b> — liste complète, filtrable, avec sélection de trades et export CSV</li>
+            <li><b>Performance</b> — statistiques détaillées (aperçu, résumé, jours, trades)</li>
+            <li><b>Prop Firms</b> — suivi de tes comptes de prop firm (achats, passages de phase, payouts...)</li>
+            <li><b>Compte</b> — gestion des comptes, dépôts/retraits, catégories de tags, langue</li>
+            <li><b>Importer CSV</b> — import des exports TradingView ou des rapports MetaTrader 5</li>
+            <li><b>Analyses</b> — journal de tes analyses de marché, organisé par calendrier</li>
+          </ul>
+        </div>
+
+        <div class="panel help-panel">
+          <h3 data-i18n="help.importTitle">Importer des trades</h3>
+          <p data-i18n="help.importBody">
+            Dans <b>Importer CSV</b>, choisis la plateforme (TradingView ou MetaTrader 5), le compte cible, puis le
+            fichier. TradingView : exporte depuis Paper Trading → Historique des ordres. MetaTrader 5 : clic droit
+            dans l'onglet Historique → Rapport → Enregistrer en XLSX (français et anglais tous deux supportés). Les
+            doublons déjà importés sont détectés et grisés automatiquement.
+          </p>
+        </div>
+
+        <div class="panel help-panel">
+          <h3 data-i18n="help.manualTitle">Ajouter ou éditer un trade</h3>
+          <p data-i18n="help.manualBody">
+            Depuis l'onglet Trades, clique sur "+ Ajouter un trade" ou sur une ligne existante. Le champ Notes
+            propose une mise en forme (gras, italique, souligné, couleur, lien) — colle un lien seul sur sa ligne
+            pour obtenir un aperçu automatique. Tu peux joindre plusieurs captures d'écran, et renseigner un prix
+            MAE (plus bas atteint) et MFE (plus haut atteint) si tu les as relevés sur ton graphique.
+          </p>
+        </div>
+
+        <div class="panel help-panel">
+          <h3 data-i18n="help.analysesTitle">Journal d'analyses</h3>
+          <p data-i18n="help.analysesBody">
+            L'onglet Analyses affiche un calendrier mensuel. Survole un jour puis clique le bouton "+" pour créer
+            une analyse (titre + notes riches, avec captures d'écran) ; clique une entrée existante pour l'éditer.
+          </p>
+        </div>
+
+        <div class="panel help-panel">
+          <h3 data-i18n="help.exportTitle">Exporter tes trades</h3>
+          <p data-i18n="help.exportBody">
+            Dans l'onglet Trades, coche les trades à exporter (ou la case en en-tête pour tout sélectionner), puis
+            clique "Exporter CSV". Sans sélection, l'export porte sur tous les trades actuellement filtrés — utile
+            pour une déclaration fiscale ou un partage avec un mentor.
+          </p>
+        </div>
+
+        <div class="panel help-panel">
+          <h3 data-i18n="help.backupTitle">Sauvegarde automatique</h3>
+          <p data-i18n="help.backupBody">
+            À chaque démarrage de l'application, une copie de la base de données et des captures d'écran est
+            enregistrée automatiquement sur OneDrive (les 14 dernières sauvegardes sont conservées). Vérifie
+            simplement que OneDrive est bien lancé et synchronise sur ta machine.
+          </p>
+        </div>
+
+        <div class="panel help-panel">
+          <h3 data-i18n="help.troubleshootTitle">Dépannage rapide</h3>
+          <ul data-i18n="help.troubleshootBody">
+            <li>Le navigateur n'affiche rien sur 127.0.0.1:8420 → le serveur n'est pas lancé, relance <code>start.bat</code></li>
+            <li>Un import échoue avec "fichier non reconnu" → vérifie que c'est bien un export TradingView "Order History" ou un rapport MetaTrader 5 "Report History"</li>
+            <li>Un solde semble faux → vérifie les filtres de compte et de dates en haut à droite du Dashboard</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- MODAL: day detail -->
+<div class="modal-overlay" id="day-modal">
+  <div class="modal day-modal">
+    <div class="day-modal-header">
+      <div>
+        <div class="day-modal-date" id="day-modal-date">-</div>
+      </div>
+      <div class="day-modal-pnl" id="day-modal-pnl">-</div>
+    </div>
+
+    <div class="day-modal-top">
+      <div id="day-modal-chart" class="chart-wrap"></div>
+      <div class="day-modal-stats">
+        <div class="day-stat"><div class="day-stat-label" data-i18n="day.totalTrades">Total trades</div><div class="day-stat-value" id="day-stat-total">-</div></div>
+        <div class="day-stat"><div class="day-stat-label" data-i18n="day.grossPnl">P&amp;L brut</div><div class="day-stat-value" id="day-stat-gross">-</div></div>
+        <div class="day-stat"><div class="day-stat-label" data-i18n="day.winnersLosers">Gagnants / Perdants</div><div class="day-stat-value" id="day-stat-winlose">-</div></div>
+        <div class="day-stat"><div class="day-stat-label" data-i18n="day.commissions">Commissions</div><div class="day-stat-value" id="day-stat-commissions">-</div></div>
+        <div class="day-stat"><div class="day-stat-label" data-i18n="day.winRate">Win rate</div><div class="day-stat-value" id="day-stat-winrate">-</div></div>
+        <div class="day-stat"><div class="day-stat-label" data-i18n="day.volume">Volume</div><div class="day-stat-value" id="day-stat-volume">-</div></div>
+        <div class="day-stat"><div class="day-stat-label" data-i18n="day.profitFactor">Profit factor</div><div class="day-stat-value" id="day-stat-pf">-</div></div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table" id="day-modal-table">
+        <thead><tr>
+          <th data-i18n="day.openTime">Heure d'ouverture</th><th data-i18n="table.symbol">Symbole</th>
+          <th data-i18n="table.side">Sens</th><th data-i18n="day.netPnl">P&amp;L net</th>
+          <th data-i18n="day.netRoi">ROI net</th><th data-i18n="day.rMultiple">R réalisé</th>
+          <th data-i18n="form.strategy">Stratégie</th><th data-i18n="day.tags">Tags</th>
+        </tr></thead>
+        <tbody id="day-modal-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn" id="day-modal-close" data-i18n="form.cancel">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: add/edit trade -->
+<div class="modal-overlay" id="trade-modal">
+  <div class="modal">
+    <h3 id="trade-modal-title" data-i18n="modal.addTitle">Ajouter un trade</h3>
+    <form id="trade-form">
+      <input type="hidden" id="trade-id">
+      <div class="form-grid">
+        <label><span data-i18n="table.account">Compte</span> <select id="f-account"></select></label>
+        <label><span data-i18n="form.symbol">Symbole</span> <input type="text" id="f-symbol" required placeholder="EURUSD"></label>
+        <label><span data-i18n="form.side">Sens</span>
+          <select id="f-side">
+            <option value="long" data-i18n="form.long">Long</option>
+            <option value="short" data-i18n="form.short">Short</option>
+          </select>
+        </label>
+        <label><span data-i18n="form.quantity">Quantité</span> <input type="number" step="any" id="f-quantity" required></label>
+        <label><span data-i18n="form.entryPrice">Prix d'entrée</span> <input type="number" step="any" id="f-entry-price" required></label>
+        <label><span data-i18n="form.exitPrice">Prix de sortie</span> <input type="number" step="any" id="f-exit-price"></label>
+        <label><span data-i18n="form.stopPrice">Stop loss</span> <input type="number" step="any" id="f-stop-price"></label>
+        <label><span data-i18n="form.targetPrice">Take profit</span> <input type="number" step="any" id="f-target-price"></label>
+        <label><span data-i18n="form.maePrice">Prix MAE (plus bas atteint)</span> <input type="number" step="any" id="f-mae-price"></label>
+        <label><span data-i18n="form.mfePrice">Prix MFE (plus haut atteint)</span> <input type="number" step="any" id="f-mfe-price"></label>
+        <label><span data-i18n="form.commission">Commission</span> <input type="number" step="any" id="f-commission" value="0"></label>
+        <label><span data-i18n="form.entryTime">Heure d'entrée</span> <input type="datetime-local" id="f-entry-time" required></label>
+        <label><span data-i18n="form.exitTime">Heure de sortie</span> <input type="datetime-local" id="f-exit-time"></label>
+        <label><span data-i18n="form.strategy">Stratégie</span> <input type="text" id="f-strategy" list="strategy-options"></label>
+      </div>
+      <datalist id="strategy-options"></datalist>
+      <div class="full mae-mfe-row" id="mae-mfe-badges" style="display:none">
+        <span data-i18n="form.maeMfeLabel">Price MAE / MFE</span>
+        <span class="badge neg" id="mae-badge"></span>
+        <span class="badge pos" id="mfe-badge"></span>
+      </div>
+      <div class="full">
+        <div class="tag-categories-label" data-i18n="tags.categoriesLabel">Catégories</div>
+        <div id="f-tag-categories" class="tag-categories-box"></div>
+      </div>
+      <label class="full"><span data-i18n="form.notes">Notes</span></label>
+      <div class="full notes-editor-wrap">
+        <div class="notes-toolbar" id="notes-toolbar">
+          <button type="button" data-cmd="bold" data-i18n-title="notes.bold" title="Gras"><b>B</b></button>
+          <button type="button" data-cmd="italic" data-i18n-title="notes.italic" title="Italique"><i>I</i></button>
+          <button type="button" data-cmd="underline" data-i18n-title="notes.underline" title="Souligné"><u>U</u></button>
+          <button type="button" data-cmd="link" data-i18n-title="notes.link" title="Lien">🔗</button>
+          <label class="notes-color-swatch" data-i18n-title="notes.textColor" title="Couleur du texte">
+            A<input type="color" id="notes-color-picker" value="#e6e9f0">
+          </label>
+        </div>
+        <div id="f-notes" class="notes-editable" contenteditable="true"></div>
+      </div>
+      <div class="full" id="notes-link-previews"></div>
+      <div class="full">
+        <span data-i18n="form.screenshot">Captures d'écran</span>
+        <div id="f-screenshot-gallery" class="screenshot-gallery"></div>
+        <input type="file" id="f-screenshot" accept="image/*" multiple>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn danger" id="delete-trade-btn" data-i18n="form.delete" style="display:none">Supprimer</button>
+        <button type="button" class="btn" id="cancel-trade-btn" data-i18n="form.cancel">Annuler</button>
+        <button type="submit" class="btn primary" data-i18n="form.save">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: add/edit analysis -->
+<div class="modal-overlay" id="analysis-modal">
+  <div class="modal">
+    <h3 id="analysis-modal-title" data-i18n="analysis.addTitle">Ajouter une analyse</h3>
+    <form id="analysis-form">
+      <input type="hidden" id="an-id">
+      <div class="form-grid">
+        <label><span data-i18n="form.date">Date</span> <input type="date" id="an-date" required></label>
+        <label><span data-i18n="form.title">Titre</span> <input type="text" id="an-title" required></label>
+      </div>
+      <label class="full"><span data-i18n="form.notes">Notes</span></label>
+      <div class="full notes-editor-wrap">
+        <div class="notes-toolbar" id="an-notes-toolbar">
+          <button type="button" data-cmd="bold" data-i18n-title="notes.bold" title="Gras"><b>B</b></button>
+          <button type="button" data-cmd="italic" data-i18n-title="notes.italic" title="Italique"><i>I</i></button>
+          <button type="button" data-cmd="underline" data-i18n-title="notes.underline" title="Souligné"><u>U</u></button>
+          <button type="button" data-cmd="link" data-i18n-title="notes.link" title="Lien">🔗</button>
+          <label class="notes-color-swatch" data-i18n-title="notes.textColor" title="Couleur du texte">
+            A<input type="color" id="an-notes-color-picker" value="#e6e9f0">
+          </label>
+        </div>
+        <div id="an-notes" class="notes-editable" contenteditable="true"></div>
+      </div>
+      <div class="full" id="an-notes-link-previews"></div>
+      <div class="full">
+        <span data-i18n="form.screenshot">Captures d'écran</span>
+        <div id="an-screenshot-gallery" class="screenshot-gallery"></div>
+        <input type="file" id="an-screenshot" accept="image/*" multiple>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn danger" id="delete-analysis-btn" data-i18n="form.delete" style="display:none">Supprimer</button>
+        <button type="button" class="btn" id="cancel-analysis-btn" data-i18n="form.cancel">Annuler</button>
+        <button type="submit" class="btn primary" data-i18n="form.save">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
